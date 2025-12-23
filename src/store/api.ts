@@ -40,20 +40,28 @@ export const recipeApi = createApi({
     }),
 
     createRecipe: builder.mutation<Recipe, Omit<Recipe, 'id' | 'created_at'>>({
-      queryFn: async (recipe) => {
-        const recipeWithUser = { ...recipe, user_id: supabase.auth.getUser().data.user?.id };
-        const { data, error } = await supabase
-          .from('recipes')
-          .insert(recipe)
-          .insert(recipeWithUser)
-          .select()
-          .single()
-        
-        if (error) return { error }
-        return { data }
-      },
-      invalidatesTags: ['Recipe'],
-    }),
+  queryFn: async (recipe) => {
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (!session?.user) {
+      return { error: { message: 'Не авторизован' } }
+    }
+
+    const { data, error } = await supabase
+      .from('recipes')
+      .insert({ 
+        ...recipe, 
+        author: session.user.email! 
+      })
+      .select()
+      .single()
+    
+    if (error) return { error }
+    return { data }
+  },
+  invalidatesTags: ['Recipe'],
+}),
+
 
     updateRecipe: builder.mutation<Recipe, { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author' >>({
       queryFn: async (recipe) => {
