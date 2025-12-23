@@ -50,10 +50,10 @@ export const recipeApi = createApi({
 
       const { steps, ...cleanRecipe } = recipe;
       
-      const validCategories = ['Завтрак', 'Обед', 'Ужин', 'Закуски', 'Десерты'];
-      const category = cleanRecipe.category && validCategories.includes(cleanRecipe.category) 
-        ? cleanRecipe.category 
-        : 'Обед';
+      const validCategories = ['breakfast', 'lunch', 'dinner', 'dessert', 'snack'];
+      const category = validCategories.includes(cleanRecipe.category?.toLowerCase()) 
+        ? cleanRecipe.category.toLowerCase() 
+        : 'lunch';
       
       const recipeWithUser = { 
         ...cleanRecipe,
