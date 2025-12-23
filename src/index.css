@@ -862,10 +862,10 @@ body:has(.auth-page) {
   100% { transform: rotate(360deg); }
 }
 .recipe-page {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 40px 24px;
-  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  background: linear-gradient(135deg, #fff1e0 0%, #ffe4cc 50%, #ffdbac 100%) !important;
   min-height: 100vh;
 }
 
@@ -1172,25 +1172,28 @@ body:has(.auth-page) {
 }
 
 .btn-edit {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  background: #f9fafb;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .btn-edit:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
+  background: #f3f4f6;
+  color: #374151;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
 .btn-delete {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: linear-gradient(135deg, #fa8373, #f97316);
   color: white;
-  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 25px rgba(250, 131, 115, 0.4);
 }
 
 .btn-delete:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(239, 68, 68, 0.5);
+  box-shadow: 0 12px 35px rgba(250, 131, 115, 0.5);
 }
 
 .back-link {
