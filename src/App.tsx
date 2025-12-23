@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage'
 import RecipePage from './pages/RecipePage'
 import AuthPage from './pages/AuthPage'
 import CreateRecipePage from './pages/CreateRecipePage'
+import ProfilePage from './pages/ProfilePage'
+import CreateRecipePage from './pages/CreateRecipePage'
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
         <Route path="recipe/:id" element={<RecipePage />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="/create" element={<CreateRecipePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
     </Routes>
   )
