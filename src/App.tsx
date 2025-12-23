@@ -5,7 +5,6 @@ import RecipePage from './pages/RecipePage'
 import AuthPage from './pages/AuthPage'
 import CreateRecipePage from './pages/CreateRecipePage'
 import ProfilePage from './pages/ProfilePage'
-import CreateRecipePage from './pages/CreateRecipePage'
 
 function App() {
   return (
