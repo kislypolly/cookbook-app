@@ -121,21 +121,20 @@ const RecipePage = () => {
 
             <div className="recipe-info">
               <div className="info-card time-card">
-                <h4 className="info-title">⏱️ Время</h4>
+                <h4 className="info-title">⏱️ Время готовки</h4>
                 <div className="info-grid">
                   <div className="info-row">
-                    <span className="info-label">Подготовка:</span>
-                    <span className="info-value">{recipe.prep_time}</span>
-                  </div>
-                  <div className="info-row">
-                    <span className="info-label">Готовка:</span>
                     <span className="info-value">{recipe.cook_time}</span>
-                  </div>
-                  <div className="time-progress">
-                    <div className="time-progress-bar"></div>
                   </div>
                 </div>
               </div>
+            
+              <div className="info-card servings-card">
+                <h4 className="info-title">👥 Порции</h4>
+                <div className="text-4xl font-bold text-purple-600">{recipe.servings}</div>
+              </div>
+            </div>
+
 
               <div className="info-card servings-card">
                 <h4 className="info-title">👥 Порции</h4>
