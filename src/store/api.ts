@@ -41,9 +41,11 @@ export const recipeApi = createApi({
 
     createRecipe: builder.mutation<Recipe, Omit<Recipe, 'id' | 'created_at'>>({
       queryFn: async (recipe) => {
+        const recipeWithUser = { ...recipe, user_id: supabase.auth.getUser().data.user?.id };
         const { data, error } = await supabase
           .from('recipes')
           .insert(recipe)
+          .insert(recipeWithUser)
           .select()
           .single()
         
