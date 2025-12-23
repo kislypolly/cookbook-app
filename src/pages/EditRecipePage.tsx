@@ -38,7 +38,6 @@ const EditRecipePage = () => {
     }
   }, [recipe, user, id, navigate])
 
-  // Все функции add/remove как в CreateRecipePage
   const [newIngredient, setNewIngredient] = useState('')
   const [newStep, setNewStep] = useState('')
 
@@ -95,9 +94,7 @@ const EditRecipePage = () => {
         <p className="create-subtitle">Измените данные и сохраните</p>
       </div>
 
-      {/* Тот же JSX что в CreateRecipePage, только */}
       <form onSubmit={handleSubmit} className="create-form">
-        {/* ... все поля как в CreateRecipePage */}
         <div className="form-actions">
           <button
             type="button"
