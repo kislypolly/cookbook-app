@@ -69,7 +69,7 @@ const RecipePage = () => {
         </Link>
 
         {user?.id === recipe.user_id && (
-          <div className="flex gap-3 ml-auto">
+          <div className="flex gap-6 ml-auto">
             <Link 
               to={`/edit/${recipe.id}`}
               className="action-btn btn-edit"
