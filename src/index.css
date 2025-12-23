@@ -1266,3 +1266,24 @@ body:has(.recipe-page) {
   max-width: 1000px;
   margin: 0 auto;
 }
+.header-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 640px) {
+  .header-buttons {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+}
+
+.buttons-group {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
