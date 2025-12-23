@@ -22,14 +22,15 @@ export const useAuth = () => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string) => {  // ← УБРАЛ username
+  const signUp = async (email: string, password: string) => {  
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: cleanEmail,
+    password: password 
     })
-    if (error) throw error
+    console.log('✅ Result:', data, error)
+  if (error) throw new Error(error.message)
   }
-
+  
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
