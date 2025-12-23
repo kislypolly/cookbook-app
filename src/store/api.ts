@@ -2,7 +2,6 @@ import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { supabase } from '../lib/supabase'
 import { Recipe } from '../types/recipe'
 
-// Supabase прямые запросы
 export const recipeApi = createApi({
   reducerPath: 'recipeApi',
   baseQuery: fakeBaseQuery(),
@@ -53,11 +52,44 @@ export const recipeApi = createApi({
       },
       invalidatesTags: ['Recipe'],
     }),
+
+    updateRecipe: builder.mutation<Recipe, { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author' >>({
+      queryFn: async (recipe) => {
+        const { data, error } = await supabase
+          .from('recipes')
+          .update({ 
+            ...recipe, 
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', recipe.id)
+          .select()
+          .single()
+        
+        if (error) return { error }
+        return { data }
+      },
+      invalidatesTags: ['Recipe'],
+    }),
+
+    deleteRecipe: builder.mutation<void, string>({
+      queryFn: async (id) => {
+        const { error } = await supabase
+          .from('recipes')
+          .delete()
+          .eq('id', id)
+        
+        if (error) return { error }
+        return { data: undefined }
+      },
+      invalidatesTags: ['Recipe'],
+    }),
   }),
 })
 
 export const { 
   useGetRecipesQuery, 
   useGetRecipeByIdQuery, 
-  useCreateRecipeMutation 
+  useCreateRecipeMutation,
+  useUpdateRecipeMutation,
+  useDeleteRecipeMutation
 } = recipeApi
