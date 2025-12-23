@@ -7,14 +7,18 @@ const RecipePage = () => {
 
   if (!id) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md p-8 bg-white rounded-3xl shadow-2xl">
-          <div className="text-6xl mb-6">🍳</div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Неверный URL</h2>
-          <p className="text-gray-600 mb-8">ID рецепта отсутствует</p>
-          <Link to="/" className="bg-orange-600 text-white px-8 py-3 rounded-2xl hover:bg-orange-700 transition-all">
-            ← Все рецепты
-          </Link>
+      <div className="recipe-page">
+        <div className="recipe-container">
+          <div className="recipe-hero">
+            <div className="recipe-hero-content">
+              <span className="recipe-hero-emoji">🍳</span>
+              <h1 className="recipe-title">Неверный URL</h1>
+              <p className="recipe-description-large">ID рецепта отсутствует</p>
+              <Link to="/" className="back-link">
+                ← Все рецепты
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -22,28 +26,37 @@ const RecipePage = () => {
 
   const { user } = useAuth()
   const { data: recipe, isLoading, error, isError } = useGetRecipeByIdQuery(id, {
-    skip: !id
+    skip: !id,
   })
   const [deleteRecipe] = useDeleteRecipeMutation()
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500"></div>
+      <div className="recipe-page">
+        <div className="loader">
+          <div className="spinner" />
+          <p>Загружаем рецепт...</p>
+        </div>
       </div>
     )
   }
 
   if (isError || error || !recipe) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md p-8 bg-white rounded-3xl shadow-2xl">
-          <div className="text-6xl mb-6">🍳</div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Рецепт не найден</h2>
-          <p className="text-gray-600 mb-8">Проверьте правильность ссылки</p>
-          <Link to="/" className="bg-orange-600 text-white px-8 py-3 rounded-2xl hover:bg-orange-700 transition-all">
-            ← Все рецепты
-          </Link>
+      <div className="recipe-page">
+        <div className="recipe-container">
+          <div className="recipe-hero">
+            <div className="recipe-hero-content">
+              <span className="recipe-hero-emoji">🍳</span>
+              <h1 className="recipe-title">Рецепт не найден</h1>
+              <p className="recipe-description-large">
+                Проверьте правильность ссылки
+              </p>
+              <Link to="/" className="back-link">
+                ← Все рецепты
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -55,31 +68,28 @@ const RecipePage = () => {
         await deleteRecipe(recipe.id).unwrap()
         alert('Рецепт удален!')
         window.location.href = '/'
-      } catch (error) {
-        alert('Ошибка удаления: ' + error)
+      } catch (err) {
+        alert('Ошибка удаления: ' + err)
       }
     }
   }
 
   return (
     <div className="recipe-page">
-      <div className="header-buttons pt-4 pb-8 px-6 mb-8 max-w-[1000px] mx-auto">
+      <div className="header-buttons">
         <Link to="/" className="back-link">
           ← На главную
         </Link>
 
         {user?.id === recipe.user_id && (
           <div className="buttons-group">
-            <Link 
-              to={`/edit/${recipe.id}`}
+            <Link
+              to={`/recipes/${recipe.id}/edit`}
               className="action-btn btn-edit"
             >
               ✏️ Изменить рецепт
             </Link>
-            <button 
-              onClick={handleDelete}
-              className="action-btn btn-delete"
-            >
+            <button onClick={handleDelete} className="action-btn btn-delete">
               🗑️ Удалить
             </button>
           </div>
@@ -90,54 +100,68 @@ const RecipePage = () => {
         <div className="recipe-hero">
           <div className="recipe-hero-content">
             <span className="recipe-hero-emoji">🍲</span>
-          </div>
-        </div>
-        
-        <div className="recipe-header">
-          <div className="recipe-tags">
-            <span className="recipe-tag">{recipe.category?.toUpperCase()}</span>
-            <span className="recipe-tag">{recipe.difficulty?.toUpperCase()}</span>
-          </div>
 
-          <h1 className="recipe-title">{recipe.title}</h1>
-          <p className="recipe-description">{recipe.description}</p>
+            <div className="recipe-tags">
+              {recipe.category && (
+                <span className="recipe-tag">
+                  {recipe.category.toUpperCase()}
+                </span>
+              )}
+              {recipe.difficulty && (
+                <span className="recipe-tag">
+                  {recipe.difficulty.toUpperCase()}
+                </span>
+              )}
+            </div>
+
+            <h1 className="recipe-title">{recipe.title}</h1>
+
+            {recipe.description && (
+              <p className="recipe-description-large">{recipe.description}</p>
+            )}
+          </div>
         </div>
 
         <div className="recipe-content">
           <div className="recipe-grid">
-            <div className="ingredients-section">
-              <h3 className="ingredients-title">
+            <section className="ingredients-section">
+              <h2 className="ingredients-title">
                 Ингредиенты ({recipe.servings} порций)
-              </h3>
+              </h2>
               <div className="ingredients-list">
                 {recipe.ingredients?.map((ingredient, index) => (
                   <div key={index} className="ingredient-item">
-                    <span className="ingredient-number">{index + 1}</span>
-                    <span>{ingredient}</span>
+                    <div className="ingredient-number">{index + 1}</div>
+                    <div>{ingredient}</div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            <div className="recipe-info">
-              <div className="info-card time-card">
-                <h4 className="info-title">⏱️ Время готовки</h4>
+            <aside className="recipe-info">
+              <div className="info-card">
+                <h3 className="info-title">Информация</h3>
                 <div className="info-grid">
                   <div className="info-row">
-                    <span className="info-value">{recipe.cook_time}</span>
+                    <span className="info-label">Время готовки</span>
+                    <span className="info-value">
+                      {recipe.cook_time} мин/ч
+                    </span>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-label">Порции</span>
+                    <span className="info-value">{recipe.servings}</span>
                   </div>
                 </div>
+                <div className="time-progress">
+                  <div className="time-progress-bar" />
+                </div>
               </div>
-
-              <div className="info-card servings-card">
-                <h4 className="info-title">👥 Порции</h4>
-                <div className="text-4xl font-bold text-purple-600">{recipe.servings}</div>
-              </div>
-            </div>
+            </aside>
           </div>
 
-          <div className="steps-section">
-            <h3 className="steps-title">Инструкции</h3>
+          <section className="steps-section">
+            <h2 className="steps-title">Инструкции</h2>
             <div className="steps-list">
               {recipe.instructions?.map((step, index) => (
                 <div key={index} className="step-item">
@@ -148,7 +172,7 @@ const RecipePage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>
