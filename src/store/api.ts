@@ -50,29 +50,29 @@ export const recipeApi = createApi({
 
       const { steps, ...cleanRecipe } = recipe;
       
+      const validCategories = ['Завтрак', 'Обед', 'Ужин', 'Закуски', 'Десерты'];
+      const category = cleanRecipe.category && validCategories.includes(cleanRecipe.category) 
+        ? cleanRecipe.category 
+        : 'Обед';
+      
       const recipeWithUser = { 
         ...cleanRecipe,
         user_id: user.id,
+        category,
         instructions: steps || cleanRecipe.instructions || [],
         ingredients: cleanRecipe.ingredients || []
       };
-      
-      console.log('📤 SENDING:', JSON.stringify(recipeWithUser, null, 2));
       
       const { data, error } = await supabase
         .from('recipes')
         .insert(recipeWithUser);
       
-      console.log('📥 RESPONSE:', data, error);
-      
       if (error) {
-        console.error('❌ ERROR:', error);
         return { error: { message: error.message } };
       }
       
       return { data: data?.[0] };
     } catch (error: any) {
-      console.error('💥 CATCH:', error);
       return { error: { message: 'Ошибка создания рецепта' } };
     }
   },
