@@ -1,11 +1,12 @@
 import { useParams, Link } from 'react-router-dom'
-import { useGetRecipeByIdQuery } from '../store/api'
+import { useGetRecipeByIdQuery, useDeleteRecipeMutation } from '../store/api'
 import { useAuth } from '../hooks/useAuth'
 
 const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
   const { data: recipe, isLoading, error } = useGetRecipeByIdQuery(id!)
+  const [deleteRecipe] = useDeleteRecipeMutation()
 
   if (isLoading) {
     return (
@@ -29,14 +30,45 @@ const RecipePage = () => {
     )
   }
 
+  const handleDelete = async () => {
+    if (confirm('Удалить рецепт навсегда?')) {
+      try {
+        await deleteRecipe(recipe.id).unwrap()
+        alert('Рецепт удален!')
+        window.location.href = '/'
+      } catch (error) {
+        alert('Ошибка удаления: ' + error)
+      }
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <Link 
-        to="/" 
-        className="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold mb-8"
-      >
-        ← На главную
-      </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <Link 
+          to="/" 
+          className="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold"
+        >
+          ← На главную
+        </Link>
+
+        {user?.id === recipe.user_id && (
+          <div className="flex gap-3 ml-auto">
+            <Link 
+              to={`/edit/${recipe.id}`}
+              className="bg-blue-600 text-white px-6 py-3 rounded-2xl hover:bg-blue-700 font-semibold flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              ✏️ Изменить рецепт
+            </Link>
+            <button 
+              onClick={handleDelete}
+              className="bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-semibold flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              🗑️ Удалить
+            </button>
+          </div>
+        )}
+      </div>
 
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
         <div className="h-96 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
