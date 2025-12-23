@@ -41,33 +41,38 @@ export const recipeApi = createApi({
 
     createRecipe: builder.mutation<Recipe, Omit<Recipe, 'id' | 'created_at'>>({
   queryFn: async (recipe) => {
-    const { data: { session } } = await supabase.auth.getSession()
-    
-    if (!session?.user) {
-      return { error: { message: 'Не авторизован' } }
-    }
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !user) {
+        return { error: { message: 'Требуется авторизация' } };
+      }
 
-    const { data, error } = await supabase
-      .from('recipes')
-      .insert({ 
+      const recipeWithUser = { 
         ...recipe, 
-        user_id: session.user.id,
-        title: recipe.title,
-        description: recipe.description,
-        ingredients: recipe.ingredients,
-        steps: recipe.steps,  // instructions → steps
-        prep_time: recipe.prep_time,
-        servings: recipe.servings,
-        category: recipe.category
-      })
-      .select()
-      .single()
-    
-    if (error) return { error }
-    return { data }
+        user_id: user.id 
+      };
+      
+      const { data, error } = await supabase
+        .from('recipes')
+        .insert(recipeWithUser)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        return { error: { message: error.message } };
+      }
+      
+      return { data };
+    } catch (error: any) {
+      console.error('Create recipe error:', error);
+      return { error: { message: 'Ошибка создания рецепта' } };
+    }
   },
   invalidatesTags: ['Recipe'],
 }),
+
 
 
 
