@@ -48,11 +48,13 @@ export const recipeApi = createApi({
         return { error: { message: 'Требуется авторизация' } };
       }
 
+      const { steps, ...cleanRecipe } = recipe;
+      
       const recipeWithUser = { 
-        ...recipe,
+        ...cleanRecipe,
         user_id: user.id,
-        instructions: recipe.steps || recipe.instructions || [],
-        ingredients: recipe.ingredients || []
+        instructions: steps || cleanRecipe.instructions || [],
+        ingredients: cleanRecipe.ingredients || []
       };
       
       const { data, error } = await supabase
@@ -62,13 +64,11 @@ export const recipeApi = createApi({
         .single();
       
       if (error) {
-        console.error('Supabase error:', error);
         return { error: { message: error.message } };
       }
       
       return { data };
     } catch (error: any) {
-      console.error('Create recipe error:', error);
       return { error: { message: 'Ошибка создания рецепта' } };
     }
   },
