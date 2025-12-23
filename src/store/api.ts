@@ -59,24 +59,19 @@ export const recipeApi = createApi({
       
       const { data, error } = await supabase
         .from('recipes')
-        .insert(recipeWithUser)
-        .select()
-        .single();
+        .insert(recipeWithUser);
       
       if (error) {
         return { error: { message: error.message } };
       }
       
-      return { data };
+      return { data: data?.[0] };
     } catch (error: any) {
       return { error: { message: 'Ошибка создания рецепта' } };
     }
   },
   invalidatesTags: ['Recipe'],
 }),
-
-
-
 
     updateRecipe: builder.mutation<Recipe, { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author' >>({
       queryFn: async (recipe) => {
