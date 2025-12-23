@@ -3,14 +3,14 @@ import { useGetRecipesQuery } from '../store/api'
 import { Recipe } from '../types/recipe'
 
 const HomePage = () => {
-  const { data: recipes = [], isLoading, error } = useGetRecipesQuery({ limit: 9 })
+  const { data: recipes = [], isLoading, error } = useGetRecipesQuery()
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">Загрузка рецептов из Supabase...</p>
+          <p className="text-xl text-gray-600">Загрузка рецептов...</p>
         </div>
       </div>
     )
@@ -40,7 +40,7 @@ const HomePage = () => {
           Рецепты от пользователей
         </h1>
         <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-          {recipes.length} рецептов в базе Supabase. Добавьте свой!
+          {recipes.length} рецептов в базе. Добавьте свой!
         </p>
       </div>
 
@@ -67,4 +67,30 @@ const HomePage = () => {
                 <p className="text-gray-600 mb-6 line-clamp-2">{recipe.description || 'Вкусный рецепт домашней кухни'}</p>
                 
                 <div className="flex flex-wrap gap-3 mb-6">
-                  <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold
+                  <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold">
+                    {recipe.category || 'lunch'}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    ⏱️ {recipe.prep_time || '30 мин'}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    👥 {recipe.servings || 4} порц.
+                  </span>
+                </div>
+                
+                <Link
+                  to={`/recipe/${recipe.id}`}
+                  className="w-full block bg-gradient-to-r from-orange-600 to-orange-700 text-white py-4 px-6 rounded-xl text-lg font-semibold text-center hover:from-orange-700 hover:to-orange-800 transition-all duration-300"
+                >
+                  🍽️ Посмотреть рецепт
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default HomePage
