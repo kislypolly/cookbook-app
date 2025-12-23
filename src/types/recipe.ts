@@ -1,24 +1,27 @@
 export interface Recipe {
   id: string;
+  user_id?: string;
   title: string;
   description: string;
+  image_url?: string;
   ingredients: string[];
   instructions: string[];
-  prepTime: string; // "30 мин"
-  cookTime: string; // "1 час"
+  prep_time: string;
+  cook_time: string;
   servings: number;
   difficulty: 'easy' | 'medium' | 'hard';
-  image: string;
   category: 'breakfast' | 'lunch' | 'dinner' | 'dessert' | 'snack';
-  createdAt: string;
+  created_at: string;
 }
 
-export interface RecipesState {
-  items: Recipe[];
+export interface User {
+  id: string;
+  email: string;
+  user_metadata: { username?: string };
+}
+
+export interface AuthState {
+  user: User | null;
   loading: boolean;
   error: string | null;
-  currentRecipe: Recipe | null;
 }
-
-export const difficulties = ['easy', 'medium', 'hard'] as const;
-export const categories = ['breakfast', 'lunch', 'dinner', 'dessert', 'snack'] as const;
