@@ -10,6 +10,7 @@ const HomePage = () => {
   return (
     <div className="space-y-24 py-20">
       {/* Hero */}
+      <div className="text-red-500 text-3xl font-bold">TEST TAILWIND</div>
       <section className="text-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-7xl md:text-8xl font-black bg-gradient-to-r from-orange-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent mb-8 leading-tight">
