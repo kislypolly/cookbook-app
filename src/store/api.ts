@@ -51,7 +51,14 @@ export const recipeApi = createApi({
       .from('recipes')
       .insert({ 
         ...recipe, 
-        author: session.user.email! 
+        user_id: session.user.id,
+        title: recipe.title,
+        description: recipe.description,
+        ingredients: recipe.ingredients,
+        steps: recipe.steps,  // instructions → steps
+        prep_time: recipe.prep_time,
+        servings: recipe.servings,
+        category: recipe.category
       })
       .select()
       .single()
@@ -61,6 +68,7 @@ export const recipeApi = createApi({
   },
   invalidatesTags: ['Recipe'],
 }),
+
 
 
     updateRecipe: builder.mutation<Recipe, { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author' >>({
