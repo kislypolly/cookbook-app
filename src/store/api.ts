@@ -61,6 +61,7 @@ export const recipeApi = createApi({
           .from('recipes')
           .update({ 
             ...recipe, 
+            user_id: supabase.auth.getUser().data.user?.id,
             updated_at: new Date().toISOString() 
           })
           .eq('id', recipe.id)
