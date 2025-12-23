@@ -682,12 +682,19 @@ body {
 }
 .auth-page {
   min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, #fff1e0 0%, #ffe4cc 50%, #ffdbac 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background: linear-gradient(135deg, #fff1e0 0%, #ffe4cc 50%, #ffdbac 100%);
+  z-index: 1000;
 }
+
 
 .auth-card {
   background: white;
