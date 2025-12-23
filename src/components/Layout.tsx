@@ -13,59 +13,49 @@ const Layout = () => {
   }
 
   return (
-    <>
-      <nav className="bg-gradient-to-r from-orange-600 to-red-600 text-white p-4 shadow-xl">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link to="/" className="text-3xl font-bold hover:text-orange-200">
+    <div className="app-root">
+      <header className="navbar">
+        <div className="navbar-inner">
+          <Link to="/" className="navbar-logo">
             🍳 Cookbook
           </Link>
-          
-          <div className="flex items-center space-x-6">
-            <Link to="/" className="hover:underline">Главная</Link>
-            {user && <Link to="/profile" className="hover:underline">Профиль</Link>}
-            <Link to="/create" className="bg-white text-orange-600 px-4 py-2 rounded-full font-semibold hover:bg-orange-50 transition-all">
+
+          <div className="navbar-links">
+            <Link to="/" className="navbar-link">Главная</Link>
+            {user && (
+              <Link to="/profile" className="navbar-link">
+                Профиль
+              </Link>
+            )}
+            <Link to="/create" className="navbar-btn">
               + Рецепт
             </Link>
-            
-            <div className="flex items-center space-x-2">
-              {user ? (
-                <>
-                  <span className="text-sm">Привет, {user.user_metadata?.username || user.email}!</span>
-                  <button 
-                    onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full text-sm font-semibold transition-all"
-                  >
-                    Выйти
-                  </button>
-                </>
-              ) : (
-                <Link 
-                  to="/auth" 
-                  className="bg-white text-orange-600 px-4 py-2 rounded-full font-semibold hover:bg-orange-50"
-                >
-                  Войти
-                </Link>
-              )}
-            </div>
+            {user ? (
+              <button onClick={handleLogout} className="navbar-btn">
+                Выйти
+              </button>
+            ) : (
+              <Link to="/auth" className="navbar-link">
+                Войти
+              </Link>
+            )}
           </div>
         </div>
-      </nav>
-      
-      <main className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-100">
-        <div className="max-w-6xl mx-auto p-6">
-          <Outlet />
-        </div>
+      </header>
+
+      <main className="page">
+        <Outlet />
       </main>
 
       {(isLoading || authLoading) && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-            <p className="text-lg font-medium text-gray-800">Загрузка...</p>
+        <div className="loader-wrap" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)' }}>
+          <div style={{ background: '#fff', padding: 24, borderRadius: 20, boxShadow: '0 20px 50px rgba(0,0,0,0.35)', textAlign: 'center' }}>
+            <div className="loader-circle" />
+            <p>Загрузка...</p>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
