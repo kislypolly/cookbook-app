@@ -63,7 +63,7 @@ const RecipePage = () => {
 
   return (
     <div className="recipe-page">
-      <div className="header-buttons p-12 mb-20 max-w-[1000px] mx-auto">
+      <div className="header-buttons p-4 mb-5 max-w-[1000px] mx-auto">
         <Link to="/" className="back-link">
           ← На главную
         </Link>
