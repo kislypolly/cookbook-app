@@ -4,8 +4,26 @@ import { useAuth } from '../hooks/useAuth'
 
 const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
+
+  if (!id) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-md p-8 bg-white rounded-3xl shadow-2xl">
+          <div className="text-6xl mb-6">🍳</div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Неверный URL</h2>
+          <p className="text-gray-600 mb-8">ID рецепта отсутствует</p>
+          <Link to="/" className="bg-orange-600 text-white px-8 py-3 rounded-2xl hover:bg-orange-700 transition-all">
+            ← Все рецепты
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const { user } = useAuth()
-  const { data: recipe, isLoading, error } = useGetRecipeByIdQuery(id!)
+  const { data: recipe, isLoading, error, isError } = useGetRecipeByIdQuery(id, {
+    skip: !id
+  })
   const [deleteRecipe] = useDeleteRecipeMutation()
 
   if (isLoading) {
@@ -16,14 +34,15 @@ const RecipePage = () => {
     )
   }
 
-  if (error || !recipe) {
+  if (isError || error || !recipe) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">🍳</div>
+        <div className="text-center max-w-md p-8 bg-white rounded-3xl shadow-2xl">
+          <div className="text-6xl mb-6">🍳</div>
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Рецепт не найден</h2>
-          <Link to="/" className="bg-orange-600 text-white px-8 py-4 rounded-2xl hover:bg-orange-700">
-            ← На главную
+          <p className="text-gray-600 mb-8">Проверьте правильность ссылки</p>
+          <Link to="/" className="bg-orange-600 text-white px-8 py-3 rounded-2xl hover:bg-orange-700 transition-all">
+            ← Все рецепты
           </Link>
         </div>
       </div>
@@ -94,7 +113,6 @@ const RecipePage = () => {
           </p>
 
           <div className="grid md:grid-cols-2 gap-12 mb-16">
-            {/* Ингредиенты */}
             <div>
               <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
                 <span className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-2xl mr-4">
@@ -114,7 +132,6 @@ const RecipePage = () => {
               </ul>
             </div>
 
-            {/* Время приготовления */}
             <div className="space-y-6">
               <div className="bg-orange-50 p-8 rounded-2xl">
                 <h4 className="text-2xl font-bold text-gray-900 mb-4">⏱️ Время</h4>
@@ -140,7 +157,6 @@ const RecipePage = () => {
             </div>
           </div>
 
-          {/* Инструкции */}
           <div>
             <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
               <span className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-2xl mr-4">
