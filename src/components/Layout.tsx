@@ -1,48 +1,63 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 
 const Layout = () => {
-  const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
-  
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
+  const { user, signOut, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
 
-  if (loading) {
-    return <div className="loader">Загрузка...</div>;
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/')
   }
 
   return (
     <div className="app-root">
-      <header className="navbar">
-        <div className="navbar-inner">
-          <Link to="/" className="navbar-logo">🍳 Cookbook</Link>
-          <div className="navbar-links">
-            <Link to="/" className="navbar-link">Главная</Link>
+      <nav className="bg-gradient-to-r from-orange-600 to-red-600 text-white p-4 shadow-xl">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <Link to="/" className="text-3xl font-bold hover:text-orange-200">
+            🍳 Cookbook
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="hover:text-orange-200">Главная</Link>
             
             {user ? (
               <>
-                <Link to="/profile" className="navbar-link">👤 {user.email?.split('@')[0]}</Link>
-                <Link to="/create" className="navbar-btn">➕ Рецепт</Link>
-                <button onClick={handleLogout} className="navbar-btn">Выйти</button>
+                <Link to="/profile" className="hover:text-orange-200">
+                  👤 {user.email?.split('@')[0]}
+                </Link>
+                <Link to="/create" className="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-100">
+                  ➕ Рецепт
+                </Link>
+                <button 
+                  onClick={handleLogout} 
+                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-semibold"
+                >
+                  Выйти
+                </button>
               </>
             ) : (
-              <Link to="/auth" className="navbar-btn">Войти</Link>
+              <Link to="/auth" className="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-100">
+                Войти
+              </Link>
             )}
           </div>
         </div>
-      </header>
+      </nav>
+
       <main className="page">
         <Outlet />
       </main>
-    </div>
-  );
-};
 
-export default Layout;
+      {authLoading && (
+        <div className="fixed inset-0 bg-black/35 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">
+            <div className="loader-circle mx-auto mb-4" />
+            <p>Загрузка...</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Layout
