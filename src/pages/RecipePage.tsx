@@ -63,7 +63,7 @@ const RecipePage = () => {
 
   return (
     <div className="recipe-page">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12 p-8">
         <Link to="/" className="back-link">
           ← На главную
         </Link>
