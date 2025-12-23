@@ -57,16 +57,22 @@ export const recipeApi = createApi({
         ingredients: cleanRecipe.ingredients || []
       };
       
+      console.log('📤 SENDING:', JSON.stringify(recipeWithUser, null, 2));
+      
       const { data, error } = await supabase
         .from('recipes')
         .insert(recipeWithUser);
       
+      console.log('📥 RESPONSE:', data, error);
+      
       if (error) {
+        console.error('❌ ERROR:', error);
         return { error: { message: error.message } };
       }
       
       return { data: data?.[0] };
     } catch (error: any) {
+      console.error('💥 CATCH:', error);
       return { error: { message: 'Ошибка создания рецепта' } };
     }
   },
