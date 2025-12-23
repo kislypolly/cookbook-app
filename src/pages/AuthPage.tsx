@@ -14,17 +14,20 @@ const AuthPage = () => {
   }, [user, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      if (isLogin) {
-        await signIn(email, password)
-      } else {
-        await signUp(email, password)
-      }
-    } catch (error) {
-      alert('Ошибка авторизации')
+  e.preventDefault()
+  try {
+    console.log('Регистрация:', email, password) 
+    if (isLogin) {
+      await signIn(email, password)
+    } else {
+      await signUp(email, password)
     }
+  } catch (error: any) {
+    console.error('Полная ошибка:', error)  
+    alert(`Ошибка: ${error.message || error}`)
   }
+}
+
 
   return (
     <div className="auth-page">
