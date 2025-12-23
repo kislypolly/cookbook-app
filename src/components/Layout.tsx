@@ -5,7 +5,10 @@ import { useGetRecipesQuery } from '../store/api';
 const Layout = () => {
   const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { isLoading } = useGetRecipesQuery();
+
+  const { isLoading: recipesLoading } = useGetRecipesQuery(undefined, { 
+    skip: true  // Отключаем запрос в Layout!
+  });
 
   const handleLogout = async () => {
     await signOut();
@@ -21,19 +24,12 @@ const Layout = () => {
           </Link>
 
           <div className="navbar-links">
-            <Link to="/search" className="navbar-link">
-              🔍 Поиск
-            </Link>
-            
             <Link to="/" className="navbar-link">Главная</Link>
             
             {user && (
               <>
                 <Link to="/profile" className="navbar-link">
                   👤 Профиль
-                </Link>
-                <Link to="/favorites" className="navbar-link">
-                  ❤️ Избранное
                 </Link>
               </>
             )}
@@ -61,7 +57,7 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      {(isLoading || authLoading) && (
+      {(recipesLoading || authLoading) && (
         <div className="loader-wrap" style={{ 
           position: 'fixed', 
           inset: 0, 
