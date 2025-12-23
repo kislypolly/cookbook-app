@@ -26,18 +26,22 @@ export const recipeApi = createApi({
     }),
 
     getRecipeById: builder.query<Recipe, string>({
-      queryFn: async ({ id }) => {
-        const { data, error } = await supabase
-          .from('recipes')
-          .select('*')
-          .eq('id', id)
-          .single()
-        
-        if (error) return { error }
-        return { data }
-      },
-      providesTags: (result, error, id) => [{ type: 'Recipe', id }],
-    }),
+  queryFn: async (id) => {
+    if (!id) {
+      return { error: { message: 'ID рецепта обязателен' } }
+    }
+    
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (error) return { error }
+    return { data }
+  },
+  providesTags: (result, error, id) => [{ type: 'Recipe', id }],
+}),
 
     createRecipe: builder.mutation<Recipe, Omit<Recipe, 'id' | 'created_at'>>({
   queryFn: async (recipe) => {
