@@ -62,29 +62,29 @@ const RecipePage = () => {
   }
 
   return (
-    <div className="recipe-page">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12 p-8">
-        <Link to="/" className="back-link">
-          ← На главную
-        </Link>
+    <div className="header-buttons p-8 mb-12">
+  <Link to="/" className="back-link">
+    ← На главную
+  </Link>
 
-        {user?.id === recipe.user_id && (
-          <div className="flex gap-6 ml-auto">
-            <Link 
-              to={`/edit/${recipe.id}`}
-              className="action-btn btn-edit"
-            >
-              ✏️ Изменить рецепт
-            </Link>
-            <button 
-              onClick={handleDelete}
-              className="action-btn btn-delete"
-            >
-              🗑️ Удалить
-            </button>
-          </div>
-        )}
-      </div>
+  {user?.id === recipe.user_id && (
+    <div className="buttons-group">
+      <Link 
+        to={`/edit/${recipe.id}`}
+        className="action-btn btn-edit"
+      >
+        ✏️ Изменить рецепт
+      </Link>
+      <button 
+        onClick={handleDelete}
+        className="action-btn btn-delete"
+      >
+        🗑️ Удалить
+      </button>
+    </div>
+  )}
+</div>
+
 
       <div className="recipe-container">
         <div className="recipe-hero">
