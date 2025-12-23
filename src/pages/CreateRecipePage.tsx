@@ -11,14 +11,16 @@ const CreateRecipePage = () => {
     title: '',
     description: '',
     ingredients: [] as string[],
-    steps: [] as string[],
+    instructions: [] as string[],
     prep_time: '',
+    cook_time: '30',
     servings: 2,
-    category: ''
+    category: '',
+    difficulty: 'medium'
   })
 
   const [newIngredient, setNewIngredient] = useState('')
-  const [newStep, setNewStep] = useState('')
+  const [newInstruction, setNewInstruction] = useState('')
 
   const addIngredient = () => {
     if (newIngredient.trim()) {
@@ -30,13 +32,13 @@ const CreateRecipePage = () => {
     }
   }
 
-  const addStep = () => {
-    if (newStep.trim()) {
+  const addInstruction = () => {
+    if (newInstruction.trim()) {
       setFormData({
         ...formData,
-        steps: [...formData.steps, newStep.trim()]
+        instructions: [...formData.instructions, newInstruction.trim()]
       })
-      setNewStep('')
+      setNewInstruction('')
     }
   }
 
@@ -47,10 +49,10 @@ const CreateRecipePage = () => {
     })
   }
 
-  const removeStep = (index: number) => {
+  const removeInstruction = (index: number) => {
     setFormData({
       ...formData,
-      steps: formData.steps.filter((_, i) => i !== index)
+      instructions: formData.instructions.filter((_, i) => i !== index)
     })
   }
 
@@ -128,12 +130,12 @@ const CreateRecipePage = () => {
             className="form-input"
             required
           >
-          <option value="">Выберите категорию</option>
-          <option value="breakfast">Завтрак</option>
-          <option value="lunch">Обед</option>
-          <option value="dinner">Ужин</option>
-          <option value="dessert">Десерт</option>
-          <option value="snack">Закуски</option>
+            <option value="">Выберите категорию</option>
+            <option value="breakfast">Завтрак</option>
+            <option value="lunch">Обед</option>
+            <option value="dinner">Ужин</option>
+            <option value="dessert">Десерт</option>
+            <option value="snack">Закуски</option>
           </select>
         </div>
 
@@ -184,32 +186,32 @@ const CreateRecipePage = () => {
             <div className="input-group">
               <input
                 type="text"
-                value={newStep}
-                onChange={(e) => setNewStep(e.target.value)}
+                value={newInstruction}
+                onChange={(e) => setNewInstruction(e.target.value)}
                 className="form-input small"
                 placeholder="1. Разогреть сковороду..."
               />
               <button
                 type="button"
-                onClick={addStep}
+                onClick={addInstruction}
                 className="btn-small"
-                disabled={!newStep.trim()}
+                disabled={!newInstruction.trim()}
               >
                 Добавить
               </button>
             </div>
           </div>
           <div className="steps-list">
-            {formData.steps.length === 0 ? (
+            {formData.instructions.length === 0 ? (
               <div className="empty-list">Шаги будут здесь</div>
             ) : (
-              formData.steps.map((step, index) => (
+              formData.instructions.map((instruction, index) => (
                 <div key={index} className="list-item">
                   <span className="step-number">{index + 1}</span>
-                  <span>{step}</span>
+                  <span>{instruction}</span>
                   <button
                     type="button"
-                    onClick={() => removeStep(index)}
+                    onClick={() => removeInstruction(index)}
                     className="remove-btn"
                   >
                     ×
@@ -232,7 +234,7 @@ const CreateRecipePage = () => {
           <button
             type="submit"
             className="btn-primary"
-            disabled={isLoading || !formData.title || formData.ingredients.length === 0}
+            disabled={isLoading || !formData.title || formData.ingredients.length === 0 || !formData.category}
           >
             {isLoading ? 'Сохранение...' : 'Создать рецепт'}
           </button>
