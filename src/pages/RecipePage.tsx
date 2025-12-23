@@ -141,15 +141,16 @@ const RecipePage = () => {
             <aside className="recipe-info">
               <div className="info-card">
                 <h3 className="info-title">Информация</h3>
-
                 <div className="info-grid">
                   <div className="info-row">
                     <span className="info-label">Время готовки</span>
-                    <span>{recipe.cook_time} мин</span>
+                    <span className="info-value">
+                      {recipe.cook_time} мин/ч
+                    </span>
                   </div>
                   <div className="info-row">
                     <span className="info-label">Порции</span>
-                    <span>{recipe.servings}</span>
+                    <span className="info-value">{recipe.servings}</span>
                   </div>
                 </div>
               </div>
