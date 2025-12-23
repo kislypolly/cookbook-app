@@ -2,22 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-.line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/90 backdrop-blur-xl border border-white/50 shadow-xl;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-2xl hover:-translate-y-3 transition-all duration-500;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:from-primary-600 hover:to-primary-700 hover:shadow-2xl hover:scale-105 transition-all duration-300;
   }
 }
