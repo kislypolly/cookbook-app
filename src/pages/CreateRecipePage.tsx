@@ -119,17 +119,7 @@ const CreateRecipePage = () => {
             />
           </div>
         </div>
-
-        <div className="form-section">
-          <label className="form-label">Категория</label>
-          <input
-            type="text"
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="form-input"
-            placeholder="Супы, Выпечка, Десерты..."
-          />
-        </div>
+        
         <div className="form-section">
           <label className="form-label">Категория</label>
           <select
