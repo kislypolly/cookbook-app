@@ -2,111 +2,82 @@ import { Link } from 'react-router-dom'
 import { useGetRecipesQuery } from '../store/api'
 
 const HomePage = () => {
-  const { data: recipes = [], isLoading, error } = useGetRecipesQuery()
+  const { data: recipes = [], isLoading } = useGetRecipesQuery()
 
   if (isLoading) {
     return (
-      <div className="loader-wrap">
-        <div style={{ textAlign: 'center' }}>
-          <div className="loader-circle" />
-          <p>Ищем вкусные рецепты...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="loader-wrap">
-        <div style={{ background: '#fff', padding: 24, borderRadius: 20, maxWidth: 420 }}>
-          <h2 style={{ fontWeight: 800, fontSize: 20, marginBottom: 8 }}>Ошибка загрузки</h2>
-          <pre style={{ fontSize: 12, color: '#b91c1c', whiteSpace: 'pre-wrap' }}>
-            {JSON.stringify(error, null, 2)}
-          </pre>
-        </div>
+      <div className="loader">
+        <div className="spinner"></div>
+        <div>Загружаем рецепты...</div>
       </div>
     )
   }
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="hero">
-        <div className="hero-badge">ВАШ КУЛИНАРНЫЙ ДНЕВНИК</div>
-        <h1 className="hero-title">
-          Делитесь рецептами с друзьями
-          <br />и находите вдохновение
-        </h1>
-        <p className="hero-sub">
-          Храните свои любимые блюда и создавайте коллекцию домашних шедевров.
+        <h1 className="hero-title">Cookbook</h1>
+        <p className="hero-subtitle">
+          Сохраняйте любимые рецепты, делитесь с друзьями и находите вдохновение в кулинарии
         </p>
         <div className="hero-buttons">
           <Link to="/create" className="btn-primary">
-            🍳 Создать рецепт
+            + Новый рецепт
           </Link>
-          <Link to="/auth" className="btn-ghost">
-            Присоединиться
+          <Link to="/auth" className="btn-secondary">
+            Войти
           </Link>
         </div>
       </section>
 
-      {/* Статистика */}
+      {/* Stats */}
       <section className="stats">
         <div className="stat-card">
-          <div className="stat-emoji">📚</div>
-          <div className="stat-value">{recipes.length}</div>
+          <div className="stat-number">{recipes.length}</div>
           <div className="stat-label">Рецептов</div>
         </div>
         <div className="stat-card">
-          <div className="stat-emoji">⚡</div>
-          <div className="stat-value">5 мин</div>
+          <div className="stat-number">5 мин</div>
           <div className="stat-label">Создание рецепта</div>
         </div>
         <div className="stat-card">
-          <div className="stat-emoji">👩‍🍳</div>
-          <div className="stat-value">1000+</div>
-          <div className="stat-label">Поваров</div>
+          <div className="stat-number">1000+</div>
+          <div className="stat-label">Пользователей</div>
         </div>
       </section>
 
-      {/* Рецепты / пусто */}
+      {/* Recipes or Empty */}
       {recipes.length === 0 ? (
-        <section className="empty">
-          <div className="empty-emoji">🍽️</div>
-          <div className="empty-title">Пока пусто</div>
-          <p className="empty-text">Будьте первым, кто добавит свой фирменный рецепт.</p>
-          <Link to="/create" className="btn-primary">
-            🥄 Первый рецепт
-          </Link>
+        <section className="empty-state">
+          <div className="empty-emoji">🍳</div>
+          <h2 className="empty-title">Начните с первого рецепта</h2>
+          <p className="empty-subtitle">Добавьте свой любимый рецепт и создайте свою кулинарную коллекцию</p>
+          <Link to="/create" className="btn-primary">Создать первый рецепт</Link>
         </section>
       ) : (
-        <section>
-          <div style={{ marginBottom: 16, fontWeight: 800, fontSize: 22 }}>
+        <>
+          <h2 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '24px' }}>
             Последние рецепты
-          </div>
+          </h2>
           <div className="recipes-grid">
             {recipes.map((recipe: any) => (
-              <Link
-                key={recipe.id}
-                to={`/recipe/${recipe.id}`}
-                className="recipe-card"
-              >
+              <Link key={recipe.id} to={`/recipe/${recipe.id}`} className="recipe-card">
                 <div className="recipe-image">🍲</div>
-                <div className="recipe-title">{recipe.title}</div>
-                <div className="recipe-desc">
-                  {recipe.description || 'Вкусное домашнее блюдо.'}
-                </div>
-                <div className="recipe-tags">
-                  <span className="recipe-tag-pill">
-                    {recipe.category || 'Без категории'}
-                  </span>
-                  <span>⏱ {recipe.prep_time || '30 мин'}</span>
-                  <span>👥 {recipe.servings || 2} порц.</span>
+                <div className="recipe-content">
+                  <h3 className="recipe-title">{recipe.title}</h3>
+                  <p className="recipe-description">
+                    {recipe.description || 'Вкусный домашний рецепт'}
+                  </p>
+                  <div className="recipe-meta">
+                    <span>⏱ {recipe.prep_time || '30 мин'}</span>
+                    <span>👥 {recipe.servings || 2} порц.</span>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
-        </section>
+        </>
       )}
     </>
   )
