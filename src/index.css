@@ -1042,15 +1042,6 @@ body:has(.auth-page) {
   align-items: center;
   gap: 0.75rem;
 }
-
-.time-card::before {
-  content: '⏱️';
-}
-
-.servings-card::before {
-  content: '👥';
-}
-
 .info-grid {
   display: flex;
   flex-direction: column;
