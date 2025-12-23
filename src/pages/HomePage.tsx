@@ -4,7 +4,7 @@ import { fetchRecipes } from '../store/recipeSlice'
 import { Link } from 'react-router-dom'
 
 const HomePage = () => {
-  const dispatch = useAppDispatch()
+  const { data: recipes, isLoading } = useGetRecipesQuery()
   const { items, loading, error } = useAppSelector(state => state.recipes)
 
   useEffect(() => {
