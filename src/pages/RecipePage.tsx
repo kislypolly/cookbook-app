@@ -128,13 +128,6 @@ const RecipePage = () => {
                   </div>
                 </div>
               </div>
-            
-              <div className="info-card servings-card">
-                <h4 className="info-title">👥 Порции</h4>
-                <div className="text-4xl font-bold text-purple-600">{recipe.servings}</div>
-              </div>
-            </div>
-
 
               <div className="info-card servings-card">
                 <h4 className="info-title">👥 Порции</h4>
