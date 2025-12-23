@@ -13,9 +13,7 @@ const RecipePage = () => {
             <div className="recipe-hero-content">
               <span className="recipe-hero-emoji">🍳</span>
               <h1 className="recipe-title">Неверный URL</h1>
-              <p className="recipe-description-large">
-                ID рецепта отсутствует
-              </p>
+              <p className="recipe-description-large">ID рецепта отсутствует</p>
               <Link to="/" className="back-link">
                 ← Все рецепты
               </Link>
