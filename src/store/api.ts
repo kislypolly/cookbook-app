@@ -50,7 +50,9 @@ export const recipeApi = createApi({
 
       const recipeWithUser = { 
         ...recipe, 
-        user_id: user.id 
+        user_id: user.id
+        instructions: recipe.steps || recipe.instructions || [],
+        ingredients: recipe.ingredients || []   
       };
       
       const { data, error } = await supabase
