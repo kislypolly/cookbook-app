@@ -13,9 +13,7 @@ const RecipePage = () => {
             <div className="recipe-hero-content">
               <span className="recipe-hero-emoji">🍳</span>
               <h1 className="recipe-title">Неверный URL</h1>
-              <p className="recipe-description-large">
-                ID рецепта отсутствует
-              </p>
+              <p className="recipe-description-large">ID рецепта отсутствует</p>
               <Link to="/" className="back-link">
                 ← Все рецепты
               </Link>
@@ -143,20 +141,16 @@ const RecipePage = () => {
             <aside className="recipe-info">
               <div className="info-card">
                 <h3 className="info-title">Информация</h3>
+
                 <div className="info-grid">
                   <div className="info-row">
                     <span className="info-label">Время готовки</span>
-                    <span className="info-value">
-                      {recipe.cook_time} мин/ч
-                    </span>
+                    <span>{recipe.cook_time} мин</span>
                   </div>
                   <div className="info-row">
                     <span className="info-label">Порции</span>
-                    <span className="info-value">{recipe.servings}</span>
+                    <span>{recipe.servings}</span>
                   </div>
-                </div>
-                <div className="time-progress">
-                  <div className="time-progress-bar" />
                 </div>
               </div>
             </aside>
