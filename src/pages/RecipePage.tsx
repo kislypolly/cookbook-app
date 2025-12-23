@@ -69,22 +69,22 @@ const RecipePage = () => {
         </Link>
 
         {user?.id === recipe.user_id && (
-          <div className="flex gap-3 ml-auto recipe-actions">
-            <Link 
-              to={`/edit/${recipe.id}`}
-              className="action-btn btn-edit"
-            >
-              ✏️ Изменить рецепт
-            </Link>
-            <button 
-              onClick={handleDelete}
-              className="action-btn btn-delete"
-            >
-              🗑️ Удалить
-            </button>
-          </div>
-        )}
-      </div>
+  <div className="flex gap-3 ml-auto recipe-actions">
+    <Link 
+      to={`/edit/${recipe.id}`}
+      className="action-btn btn-edit"
+    >
+      ✏️ Изменить рецепт
+    </Link>
+    <button 
+      onClick={handleDelete}
+      className="action-btn btn-delete"
+    >
+      🗑️ Удалить
+    </button>
+  </div>
+)}
+
 
       <div className="recipe-container">
         <div className="recipe-hero">
