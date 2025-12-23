@@ -1271,14 +1271,20 @@ body:has(.recipe-page) {
   flex-direction: column;
   gap: 2rem;
   align-items: flex-start;
+  padding: 3rem;
+  margin-bottom: 4rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (min-width: 640px) {
   .header-buttons {
     flex-direction: row;
-    align-items: center;
     justify-content: space-between;
-    gap: 3rem;
+    align-items: center;
+    gap: 4rem;
+    padding: 3rem 4rem;
   }
 }
 
