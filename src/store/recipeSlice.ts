@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { Recipe, RecipesState } from '../types/recipe'
+import type { Recipe, RecipesState } from '../types/recipe'
+import { supabase } from '../lib/supabase'
+import type { RootState } from './store'
 
 const initialState: RecipesState = {
   items: [],
@@ -8,40 +10,45 @@ const initialState: RecipesState = {
   currentRecipe: null,
 }
 
+// загрузка рецептов из Supabase
 export const fetchRecipes = createAsyncThunk<Recipe[]>(
   'recipes/fetchRecipes',
   async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    return [
-      {
-        id: '1',
-        title: 'Классический борщ',
-        description: 'Традиционный украинский борщ с мясом и сметаной',
-        ingredients: ['Свёкла', 'Картофель', 'Морковь', 'Капуста', 'Мясо'],
-        instructions: ['Обжарить овощи', 'Сварить бульон', 'Добавить свёклу'],
-        prepTime: '20 мин',
-        cookTime: '2 часа',
-        servings: 6,
-        difficulty: 'medium',
-        image: 'https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a',
-        category: 'lunch',
-        createdAt: '2025-12-23',
-      },
-      {
-        id: '2',
-        title: 'Шоколадный торт',
-        description: 'Нежный торт с кремом и свежими ягодами',
-        ingredients: ['Мука', 'Какао', 'Сахар', 'Яйца', 'Масло'],
-        instructions: ['Смешать сухие ингредиенты', 'Добавить жидкие', 'Выпекать'],
-        prepTime: '30 мин',
-        cookTime: '40 мин',
-        servings: 8,
-        difficulty: 'easy',
-        image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587',
-        category: 'dessert',
-        createdAt: '2025-12-22',
-      },
-    ]
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      throw error
+    }
+    return (data ?? []) as Recipe[]
+  }
+)
+
+// обновление рецепта в Supabase
+export const updateRecipe = createAsyncThunk<
+  Recipe,
+  { id: string; updates: Partial<Recipe> },
+  { state: RootState }
+>(
+  'recipes/updateRecipe',
+  async ({ id, updates }, { getState }) => {
+    const { auth } = getState()
+    const userId = auth.user?.id
+
+    const { data, error } = await supabase
+      .from('recipes')
+      .update({ ...updates, user_id: userId })
+      .eq('id', id)
+      .select('*')
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return data as Recipe
   }
 )
 
@@ -69,6 +76,21 @@ const recipeSlice = createSlice({
       .addCase(fetchRecipes.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Ошибка загрузки рецептов'
+      })
+      .addCase(updateRecipe.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateRecipe.fulfilled, (state, action) => {
+        state.loading = false
+        const index = state.items.findIndex(r => r.id === action.payload.id)
+        if (index !== -1) {
+          state.items[index] = action.payload
+        }
+      })
+      .addCase(updateRecipe.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message || 'Ошибка обновления рецепта'
       })
   },
 })
