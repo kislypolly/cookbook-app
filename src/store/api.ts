@@ -84,41 +84,67 @@ export const recipeApi = createApi({
 }),
 
         updateRecipe: builder.mutation<
-      Recipe,
-      { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author'>
-    >({
-      queryFn: async (recipe) => {
-        try {
-          const {
-            data: { user },
-            error: authError,
-          } = await supabase.auth.getUser()
+  Recipe,
+  { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author'>
+>({
+  queryFn: async (recipe) => {
+    try {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser()
 
-          if (authError || !user) {
-            return { error: { message: 'Требуется авторизация' } }
-          }
+      if (authError || !user) {
+        return { error: { message: 'Требуется авторизация' } }
+      }
 
-          const { id, ...rest } = recipe
+      const {
+        id,
+        title,
+        description,
+        ingredients,
+        instructions,
+        prep_time,
+        cook_time,
+        servings,
+        category,
+        difficulty,
+      } = recipe
 
-          const { data, error } = await supabase
-            .from('recipes')
-            .update({
-              ...rest,
-              user_id: user.id,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('id', id)
-            .select()
-            .single()
+      const updatePayload = {
+        title,
+        description,
+        ingredients,
+        instructions,
+        prep_time,
+        cook_time,
+        servings,
+        category,
+        difficulty,
+        user_id: user.id,
+        updated_at: new Date().toISOString(),
+      }
 
-          if (error) return { error }
-          return { data }
-        } catch (e: any) {
-          return { error: { message: 'Ошибка обновления рецепта' } }
-        }
-      },
-      invalidatesTags: ['Recipe'],
-    }),
+      const { data, error } = await supabase
+        .from('recipes')
+        .update(updatePayload)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) {
+  console.error('updateRecipe error', error)
+  return { error }
+}
+return { error }
+      return { data }
+    } catch (e: any) {
+      return { error: { message: 'Ошибка обновления рецепта' } }
+    }
+  },
+  invalidatesTags: ['Recipe'],
+})
+
 
     deleteRecipe: builder.mutation<void, string>({
       queryFn: async (id) => {
