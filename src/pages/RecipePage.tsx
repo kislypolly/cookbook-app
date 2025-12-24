@@ -81,20 +81,33 @@ const RecipePage = () => {
           ← На главную
         </Link>
 
-        {user?.id === recipe.user_id && (
-          <div className="buttons-group">
-            <Link
-              to={`/recipe/${recipe.id}/edit`}
-              className="action-btn btn-edit"
-            >
-              ✏️ Изменить рецепт
-            </Link>
-            <button onClick={handleDelete} className="action-btn btn-delete">
-              🗑️ Удалить
-            </button>
+        <div className="buttons-group">
+            {user?.id === recipe.user_id && (
+              <>
+                <Link
+                  to={`/recipe/${recipe.id}/edit`}
+                  className="action-btn btn-edit"
+                >
+                  ✏️ Изменить рецепт
+                </Link>
+                <button onClick={handleDelete} className="action-btn btn-delete">
+                  🗑️ Удалить
+                </button>
+              </>
+            )}
+          
+            {user && (
+              <button
+                type="button"
+                className="action-btn btn-edit"
+                onClick={handleToggleFavorite}
+                disabled={isFavLoading}
+              >
+                {isFavorite ? '★ В избранном' : '☆ В избранное'}
+              </button>
+            )}
           </div>
-        )}
-      </div>
+
 
       <div className="recipe-container">
         <div className="recipe-hero">
