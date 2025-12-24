@@ -107,12 +107,8 @@ const RecipePage = () => {
                   {recipe.category.toUpperCase()}
                 </span>
               )}
-              {recipe.difficulty && (
-                <span className="recipe-tag">
-                  {recipe.difficulty.toUpperCase()}
-                </span>
-              )}
             </div>
+
 
             <h1 className="recipe-title">{recipe.title}</h1>
 
