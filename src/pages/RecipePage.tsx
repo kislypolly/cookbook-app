@@ -1,5 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
-import { useGetRecipeByIdQuery, useDeleteRecipeMutation } from '../store/api'
+import {
+  useGetRecipeByIdQuery,
+  useDeleteRecipeMutation,
+  useGetFavoritesQuery,
+  useToggleFavoriteMutation,
+} from '../store/api'
 import { useAuth } from '../hooks/useAuth'
 
 const RecipePage = () => {
@@ -29,6 +34,26 @@ const RecipePage = () => {
     skip: !id,
   })
   const [deleteRecipe] = useDeleteRecipeMutation()
+
+  const [toggleFavorite, { isLoading: isFavLoading }] =
+    useToggleFavoriteMutation()
+  const { data: favoriteRecipes } = useGetFavoritesQuery(undefined, {
+    skip: !user,
+  })
+
+  const isFavorite = !!favoriteRecipes?.some((r) => r.id === recipe?.id)
+
+  const handleToggleFavorite = async () => {
+    if (!user || !recipe) {
+      alert('Войдите, чтобы добавлять в избранное')
+      return
+    }
+    try {
+      await toggleFavorite(recipe.id).unwrap()
+    } catch {
+      alert('Не удалось обновить избранное')
+    }
+  }
 
   if (isLoading) {
     return (
@@ -82,32 +107,35 @@ const RecipePage = () => {
         </Link>
 
         <div className="buttons-group">
-            {user?.id === recipe.user_id && (
-              <>
-                <Link
-                  to={`/recipe/${recipe.id}/edit`}
-                  className="action-btn btn-edit"
-                >
-                  ✏️ Изменить рецепт
-                </Link>
-                <button onClick={handleDelete} className="action-btn btn-delete">
-                  🗑️ Удалить
-                </button>
-              </>
-            )}
-          
-            {user && (
-              <button
-                type="button"
+          {user?.id === recipe.user_id && (
+            <>
+              <Link
+                to={`/recipe/${recipe.id}/edit`}
                 className="action-btn btn-edit"
-                onClick={handleToggleFavorite}
-                disabled={isFavLoading}
               >
-                {isFavorite ? '★ В избранном' : '☆ В избранное'}
+                ✏️ Изменить рецепт
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="action-btn btn-delete"
+              >
+                🗑️ Удалить
               </button>
-            )}
-          </div>
+            </>
+          )}
 
+          {user && (
+            <button
+              type="button"
+              className="action-btn btn-edit"
+              onClick={handleToggleFavorite}
+              disabled={isFavLoading}
+            >
+              {isFavorite ? '★ В избранном' : '☆ В избранное'}
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className="recipe-container">
         <div className="recipe-hero">
@@ -152,9 +180,7 @@ const RecipePage = () => {
                 <div className="info-grid">
                   <div className="info-row">
                     <span className="info-label">Время готовки</span>
-                    <span className="info-value">
-                      {recipe.cook_time}
-                    </span>
+                    <span className="info-value">{recipe.cook_time}</span>
                   </div>
                   <div className="info-row">
                     <span className="info-label">Порции</span>
