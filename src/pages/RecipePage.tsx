@@ -100,26 +100,41 @@ const RecipePage = () => {
         <div className="recipe-hero">
           <div className="recipe-hero-content">
             <span className="recipe-hero-emoji">🍲</span>
-
-            <div className="recipe-tags">
-              {recipe.category && (
-                <span className="recipe-tag">
-                  {recipe.category.toUpperCase()}
-                </span>
-              )}
-            </div>
-
-
-            <h1 className="recipe-title">{recipe.title}</h1>
-
-            {recipe.description && (
-              <p className="recipe-description-large">{recipe.description}</p>
-            )}
           </div>
         </div>
 
+        <div className="recipe-header">
+          {recipe.category && (
+            <span className="recipe-category">
+              {recipe.category.toUpperCase()}
+            </span>
+          )}
+
+          <h1 className="recipe-title-main">{recipe.title}</h1>
+
+          {recipe.description && (
+            <p className="recipe-description-large">{recipe.description}</p>
+          )}
+        </div>
+
         <div className="recipe-content">
-          <div className="recipe-grid">
+          <div className="recipe-main">
+            <section className="steps-section">
+              <h2 className="steps-title">Инструкции</h2>
+              <div className="steps-list">
+                {recipe.instructions?.map((step, index) => (
+                  <div key={index} className="step-item">
+                    <div className="step-number">{index + 1}</div>
+                    <div className="step-content">
+                      <p className="step-text">{step}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="recipe-extra">
             <section className="ingredients-section">
               <h2 className="ingredients-title">
                 Ингредиенты ({recipe.servings} порций)
@@ -152,20 +167,6 @@ const RecipePage = () => {
               </div>
             </aside>
           </div>
-
-          <section className="steps-section">
-            <h2 className="steps-title">Инструкции</h2>
-            <div className="steps-list">
-              {recipe.instructions?.map((step, index) => (
-                <div key={index} className="step-item">
-                  <div className="step-number">{index + 1}</div>
-                  <div className="step-content">
-                    <p className="step-text">{step}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
       </div>
     </div>
