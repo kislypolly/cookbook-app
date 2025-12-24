@@ -5,7 +5,7 @@ import { Recipe } from '../types/recipe'
 export const recipeApi = createApi({
   reducerPath: 'recipeApi',
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Recipe'],
+  tagTypes: ['Recipe', 'Favorite'],
   endpoints: (builder) => ({
     getRecipes: builder.query<Recipe[], void>({
       queryFn: async () => {
@@ -136,11 +136,11 @@ export const recipeApi = createApi({
           }
 
           const { data, error } = await supabase
-          .from('recipes')
-          .update(updatePayload)
-          .eq('id', id)
-          .select()
-          .single()
+            .from('recipes')
+            .update(updatePayload)
+            .eq('id', id)
+            .select()
+            .single()
 
           if (error) {
             console.error('updateRecipe error', error)
@@ -167,6 +167,87 @@ export const recipeApi = createApi({
       },
       invalidatesTags: ['Recipe'],
     }),
+
+    getFavorites: builder.query<Recipe[], void>({
+      queryFn: async () => {
+        try {
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser()
+
+          if (authError || !user) {
+            return { error: { message: 'Требуется авторизация' } }
+          }
+
+          const { data, error } = await supabase
+            .from('favorites')
+            .select('recipes(*)')
+            .eq('user_id', user.id)
+
+          if (error) return { error }
+
+          const recipes =
+            data?.map((row: any) => row.recipes as Recipe).filter(Boolean) || []
+
+          return { data: recipes }
+        } catch {
+          return { error: { message: 'Ошибка загрузки избранного' } }
+        }
+      },
+      providesTags: ['Favorite'],
+    }),
+
+    toggleFavorite: builder.mutation<
+      { recipe_id: string; is_favorite: boolean },
+      string
+    >({
+      queryFn: async (recipeId) => {
+        try {
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser()
+
+          if (authError || !user) {
+            return { error: { message: 'Требуется авторизация' } }
+          }
+
+          const { data: existing, error: checkError } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('recipe_id', recipeId)
+            .maybeSingle()
+
+          if (checkError && checkError.code !== 'PGRST116') {
+            return { error: checkError }
+          }
+
+          if (existing) {
+            const { error: delError } = await supabase
+              .from('favorites')
+              .delete()
+              .eq('id', existing.id)
+
+            if (delError) return { error: delError }
+
+            return { data: { recipe_id: recipeId, is_favorite: false } }
+          } else {
+            const { error: insError } = await supabase
+              .from('favorites')
+              .insert({ user_id: user.id, recipe_id: recipeId })
+
+            if (insError) return { error: insError }
+
+            return { data: { recipe_id: recipeId, is_favorite: true } }
+          }
+        } catch {
+          return { error: { message: 'Ошибка обновления избранного' } }
+        }
+      },
+      invalidatesTags: ['Favorite', 'Recipe'],
+    }),
   }),
 })
 
@@ -176,4 +257,6 @@ export const {
   useCreateRecipeMutation,
   useUpdateRecipeMutation,
   useDeleteRecipeMutation,
+  useGetFavoritesQuery,
+  useToggleFavoriteMutation,
 } = recipeApi
