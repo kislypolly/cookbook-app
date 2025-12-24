@@ -677,7 +677,7 @@ body {
   }
   
   .create-form {
-    padding: 24px;ф
+    padding: 24px;
   }
 }
 body:has(.auth-page) {
