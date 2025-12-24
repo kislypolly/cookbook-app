@@ -140,7 +140,7 @@ const RecipePage = () => {
                   <div className="info-row">
                     <span className="info-label">Время готовки</span>
                     <span className="info-value">
-                      {recipe.cook_time} мин/ч
+                      {recipe.cook_time}
                     </span>
                   </div>
                   <div className="info-row">
