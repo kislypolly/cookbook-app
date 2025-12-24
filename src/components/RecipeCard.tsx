@@ -1,16 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteRecipe } from '../features/recipes/recipesSlice';
-import { Link } from 'react-router-dom';
-import { RootState } from '../store';
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { deleteRecipe } from '../features/recipes/recipesSlice'
+import type { RootState, AppDispatch } from '../store'
+import type { Recipe } from '../types/recipe'
 
 interface Props {
-  recipe: Recipe;
+  recipe: Recipe
 }
 
 export const RecipeCard: React.FC<Props> = ({ recipe }) => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const isOwner = user?.id === recipe.user_id;
+  const dispatch = useDispatch<AppDispatch>()
+  const { user } = useSelector((state: RootState) => state.auth)
+  const isOwner = user?.id === recipe.user_id
+
+  const handleDelete = () => {
+    dispatch(deleteRecipe(recipe.id))
+  }
 
   return (
     <div className="recipe-card">
@@ -19,9 +24,9 @@ export const RecipeCard: React.FC<Props> = ({ recipe }) => {
       {isOwner && (
         <div className="card-actions">
           <Link to={`/edit/${recipe.id}`}>✏️ Изменить</Link>
-          <button onClick={() => dispatch(deleteRecipe(recipe.id))}>🗑️ Удалить</button>
+          <button type="button" onClick={handleDelete}>🗑️ Удалить</button>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
