@@ -52,6 +52,31 @@ export const updateRecipe = createAsyncThunk<
   }
 )
 
+export const deleteRecipe = createAsyncThunk<
+  string,
+  string,
+  { state: RootState }
+>(
+  'recipes/deleteRecipe',
+  async (id, { getState }) => {
+    const { auth } = getState()
+    const userId = auth.user?.id
+
+    const { error } = await supabase
+      .from('recipes')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId)
+
+    if (error) {
+      throw error
+    }
+
+    return id
+  }
+)
+
+
 const recipeSlice = createSlice({
   name: 'recipes',
   initialState,
