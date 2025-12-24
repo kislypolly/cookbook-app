@@ -15,7 +15,7 @@ export const recipeApi = createApi({
             .select('*')
             .order('created_at', { ascending: false })
             .limit(9)
-          
+
           if (error) return { error }
           return { data: data || [] }
         } catch (error) {
@@ -26,125 +26,135 @@ export const recipeApi = createApi({
     }),
 
     getRecipeById: builder.query<Recipe, string>({
-  queryFn: async (id) => {
-    if (!id) {
-      return { error: { message: 'ID рецепта обязателен' } }
-    }
-    
-    const { data, error } = await supabase
-      .from('recipes')
-      .select('*')
-      .eq('id', id)
-      .single()
-    
-    if (error) return { error }
-    return { data }
-  },
-  providesTags: (result, error, id) => [{ type: 'Recipe', id }],
-}),
+      queryFn: async (id) => {
+        if (!id) {
+          return { error: { message: 'ID рецепта обязателен' } }
+        }
+
+        const { data, error } = await supabase
+          .from('recipes')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (error) return { error }
+        return { data }
+      },
+      providesTags: (result, error, id) => [{ type: 'Recipe', id }],
+    }),
 
     createRecipe: builder.mutation<Recipe, Omit<Recipe, 'id' | 'created_at'>>({
-  queryFn: async (recipe) => {
-    try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        return { error: { message: 'Требуется авторизация' } };
-      }
+      queryFn: async (recipe) => {
+        try {
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser()
 
-      const { steps, ...cleanRecipe } = recipe;
-      
-      const validCategories = ['breakfast', 'lunch', 'dinner', 'dessert', 'snack'];
-      const category = validCategories.includes(cleanRecipe.category?.toLowerCase()) 
-        ? cleanRecipe.category.toLowerCase() 
-        : 'lunch';
-      
-      const recipeWithUser = { 
-        ...cleanRecipe,
-        user_id: user.id,
-        category,
-        instructions: steps || cleanRecipe.instructions || [],
-        ingredients: cleanRecipe.ingredients || []
-      };
-      
-      const { data, error } = await supabase
-        .from('recipes')
-        .insert(recipeWithUser);
-      
-      if (error) {
-        return { error: { message: error.message } };
-      }
-      
-      return { data: data?.[0] };
-    } catch (error: any) {
-      return { error: { message: 'Ошибка создания рецепта' } };
-    }
-  },
-  invalidatesTags: ['Recipe'],
-}),
+          if (authError || !user) {
+            return { error: { message: 'Требуется авторизация' } }
+          }
 
-        updateRecipe: builder.mutation<
-  Recipe,
-  { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author'>
->({
-  queryFn: async (recipe) => {
-    try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser()
+          const { steps, ...cleanRecipe } = recipe
 
-      if (authError || !user) {
-        return { error: { message: 'Требуется авторизация' } }
-      }
+          const validCategories = [
+            'breakfast',
+            'lunch',
+            'dinner',
+            'dessert',
+            'snack',
+          ]
+          const category = validCategories.includes(
+            cleanRecipe.category?.toLowerCase(),
+          )
+            ? cleanRecipe.category.toLowerCase()
+            : 'lunch'
 
-      const {
-        id,
-        title,
-        description,
-        ingredients,
-        instructions,
-        prep_time,
-        cook_time,
-        servings,
-        category,
-        difficulty,
-      } = recipe
+          const recipeWithUser = {
+            ...cleanRecipe,
+            user_id: user.id,
+            category,
+            instructions: steps || cleanRecipe.instructions || [],
+            ingredients: cleanRecipe.ingredients || [],
+          }
 
-      const updatePayload = {
-        title,
-        description,
-        ingredients,
-        instructions,
-        prep_time,
-        cook_time,
-        servings,
-        category,
-        difficulty,
-        user_id: user.id,
-        updated_at: new Date().toISOString(),
-      }
+          const { data, error } = await supabase
+            .from('recipes')
+            .insert(recipeWithUser)
 
-      const { data, error } = await supabase
-        .from('recipes')
-        .update(updatePayload)
-        .eq('id', id)
-        .select()
-        .single()
+          if (error) {
+            return { error: { message: error.message } }
+          }
 
-      if (error) {
-  console.error('updateRecipe error', error)
-  return { error }
-}
-return { error }
-      return { data }
-    } catch (e: any) {
-      return { error: { message: 'Ошибка обновления рецепта' } }
-    }
-  },
-  invalidatesTags: ['Recipe'],
-})
+          return { data: data?.[0] }
+        } catch (error: any) {
+          return { error: { message: 'Ошибка создания рецепта' } }
+        }
+      },
+      invalidatesTags: ['Recipe'],
+    }),
 
+    updateRecipe: builder.mutation<
+      Recipe,
+      { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author'>
+    >({
+      queryFn: async (recipe) => {
+        try {
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser()
+
+          if (authError || !user) {
+            return { error: { message: 'Требуется авторизация' } }
+          }
+
+          const {
+            id,
+            title,
+            description,
+            ingredients,
+            instructions,
+            prep_time,
+            cook_time,
+            servings,
+            category,
+            difficulty,
+          } = recipe
+
+          const updatePayload = {
+            title,
+            description,
+            ingredients,
+            instructions,
+            prep_time,
+            cook_time,
+            servings,
+            category,
+            difficulty,
+            user_id: user.id,
+            updated_at: new Date().toISOString(),
+          }
+
+          const { data, error } = await supabase
+            .from('recipes')
+            .update(updatePayload)
+            .eq('id', id)
+            .select()
+            .single()
+
+          if (error) {
+            console.error('updateRecipe error', error)
+            return { error }
+          }
+
+          return { data }
+        } catch (e: any) {
+          return { error: { message: 'Ошибка обновления рецепта' } }
+        }
+      },
+      invalidatesTags: ['Recipe'],
+    }),
 
     deleteRecipe: builder.mutation<void, string>({
       queryFn: async (id) => {
@@ -152,7 +162,7 @@ return { error }
           .from('recipes')
           .delete()
           .eq('id', id)
-        
+
         if (error) return { error }
         return { data: undefined }
       },
@@ -161,10 +171,10 @@ return { error }
   }),
 })
 
-export const { 
-  useGetRecipesQuery, 
-  useGetRecipeByIdQuery, 
+export const {
+  useGetRecipesQuery,
+  useGetRecipeByIdQuery,
   useCreateRecipeMutation,
   useUpdateRecipeMutation,
-  useDeleteRecipeMutation
+  useDeleteRecipeMutation,
 } = recipeApi
