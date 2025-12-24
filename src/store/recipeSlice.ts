@@ -8,11 +8,9 @@ const initialState: RecipesState = {
   currentRecipe: null,
 }
 
-// Mock API
 export const fetchRecipes = createAsyncThunk(
   'recipes/fetchRecipes',
-  async () => {
-    // Симуляция API задержки
+
     await new Promise(resolve => setTimeout(resolve, 1000))
     return [
       {
