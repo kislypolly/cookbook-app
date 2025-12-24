@@ -12,14 +12,12 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="recipe/:id" element={<RecipePage />} />
+        <Route path="recipes/:id" element={<RecipePage />} />
+        <Route path="recipes/:id/edit" element={<EditRecipePage />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="create" element={<CreateRecipePage />} />
         <Route path="profile" element={<ProfilePage />} />
-        <Route path="edit/:id" element={<EditRecipePage />} />
       </Route>
     </Routes>
   )
 }
-
-export default App
