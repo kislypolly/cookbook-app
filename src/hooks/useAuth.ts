@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null)
@@ -11,43 +11,49 @@ export const useAuth = () => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
-  const signUp = async (email: string, password: string) => {  
+  const signUp = async (email: string, password: string) => {
     const cleanEmail = email.trim().toLowerCase()
-    console.log('Signup:', cleanEmail)
-    
-    const { data, error } = await supabase.auth.signUp({
+
+    const { error } = await supabase.auth.signUp({
       email: cleanEmail,
-      password: password 
+      password,
     })
-    console.log('Signup Result:', data, error)
-    if (error) throw new Error(error.message)
+
+    if (error) {
+      throw new Error(error.message)
+    }
   }
-  
+
   const signIn = async (email: string, password: string) => {
     const cleanEmail = email.trim().toLowerCase()
-    console.log('Login:', cleanEmail)
-    
-    const { data, error } = await supabase.auth.signInWithPassword({
+
+    const { error } = await supabase.auth.signInWithPassword({
       email: cleanEmail,
-      password
+      password,
     })
-    console.log('Login Result:', data, error)
-    if (error) throw new Error(error.message)
+
+    if (error) {
+      throw new Error(error.message)
+    }
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      throw new Error(error.message)
+    }
   }
 
   return { user, loading, signUp, signIn, signOut }
