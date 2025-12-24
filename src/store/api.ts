@@ -83,21 +83,39 @@ export const recipeApi = createApi({
   invalidatesTags: ['Recipe'],
 }),
 
-    updateRecipe: builder.mutation<Recipe, { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author' >>({
+        updateRecipe: builder.mutation<
+      Recipe,
+      { id: string } & Omit<Recipe, 'id' | 'created_at' | 'author'>
+    >({
       queryFn: async (recipe) => {
-        const { data, error } = await supabase
-          .from('recipes')
-          .update({ 
-            ...recipe, 
-            user_id: supabase.auth.getUser().data.user?.id,
-            updated_at: new Date().toISOString() 
-          })
-          .eq('id', recipe.id)
-          .select()
-          .single()
-        
-        if (error) return { error }
-        return { data }
+        try {
+          const {
+            data: { user },
+            error: authError,
+          } = await supabase.auth.getUser()
+
+          if (authError || !user) {
+            return { error: { message: 'Требуется авторизация' } }
+          }
+
+          const { id, ...rest } = recipe
+
+          const { data, error } = await supabase
+            .from('recipes')
+            .update({
+              ...rest,
+              user_id: user.id,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', id)
+            .select()
+            .single()
+
+          if (error) return { error }
+          return { data }
+        } catch (e: any) {
+          return { error: { message: 'Ошибка обновления рецепта' } }
+        }
       },
       invalidatesTags: ['Recipe'],
     }),
