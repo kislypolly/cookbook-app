@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { deleteRecipe } from '../features/recipes/recipesSlice'
+import { deleteRecipe } from '../store/recipeSlice'
 import type { RootState, AppDispatch } from '../store'
 import type { Recipe } from '../types/recipe'
 
