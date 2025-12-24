@@ -94,7 +94,7 @@ const EditRecipePage = () => {
     e.preventDefault()
     try {
       await updateRecipe({ id: id!, ...formData }).unwrap()
-      navigate(`/recipes/${id}`)
+      navigate(`/recipe/${id}`)
     } catch (error) {
       alert('Ошибка сохранения рецепта')
     }
