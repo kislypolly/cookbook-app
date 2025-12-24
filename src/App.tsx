@@ -12,8 +12,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="recipes/:id" element={<RecipePage />} />
-        <Route path="recipes/:id/edit" element={<EditRecipePage />} />
+        <Route path="recipe/:id" element={<RecipePage />} />
+        <Route path="recipe/:id/edit" element={<EditRecipePage />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="create" element={<CreateRecipePage />} />
         <Route path="profile" element={<ProfilePage />} />
