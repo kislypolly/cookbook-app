@@ -118,22 +118,6 @@ const RecipePage = () => {
         </div>
 
         <div className="recipe-content">
-          <div className="recipe-main">
-            <section className="steps-section">
-              <h2 className="steps-title">Инструкции</h2>
-              <div className="steps-list">
-                {recipe.instructions?.map((step, index) => (
-                  <div key={index} className="step-item">
-                    <div className="step-number">{index + 1}</div>
-                    <div className="step-content">
-                      <p className="step-text">{step}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
-
           <div className="recipe-extra">
             <section className="ingredients-section">
               <h2 className="ingredients-title">
@@ -167,6 +151,20 @@ const RecipePage = () => {
               </div>
             </aside>
           </div>
+
+          <section className="steps-section">
+            <h2 className="steps-title">Инструкции</h2>
+            <div className="steps-list">
+              {recipe.instructions?.map((step, index) => (
+                <div key={index} className="step-item">
+                  <div className="step-number">{index + 1}</div>
+                  <div className="step-content">
+                    <p className="step-text">{step}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </div>
