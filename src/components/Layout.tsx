@@ -21,15 +21,25 @@ const Layout = () => {
           </Link>
 
           <div className="navbar-links">
-            <Link to="/" className="navbar-link">Главная</Link>
+            <Link to="/" className="navbar-link">
+              Главная
+            </Link>
+
             {user && (
-              <Link to="/profile" className="navbar-link">
-                Профиль
-              </Link>
+              <>
+                <Link to="/profile" className="navbar-link">
+                  Профиль
+                </Link>
+                <Link to="/favorites" className="navbar-link">
+                  Избранное
+                </Link>
+              </>
             )}
+
             <Link to="/create" className="navbar-btn">
               + Рецепт
             </Link>
+
             {user ? (
               <button onClick={handleLogout} className="navbar-btn">
                 Выйти
@@ -48,8 +58,23 @@ const Layout = () => {
       </main>
 
       {(isLoading || authLoading) && (
-        <div className="loader-wrap" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)' }}>
-          <div style={{ background: '#fff', padding: 24, borderRadius: 20, boxShadow: '0 20px 50px rgba(0,0,0,0.35)', textAlign: 'center' }}>
+        <div
+          className="loader-wrap"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.35)',
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              padding: 24,
+              borderRadius: 20,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
+              textAlign: 'center',
+            }}
+          >
             <div className="loader-circle" />
             <p>Загрузка...</p>
           </div>
