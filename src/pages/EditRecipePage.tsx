@@ -319,7 +319,7 @@ const EditRecipePage = () => {
         <div className="form-actions">
           <button
             type="button"
-            onClick={() => navigate(`/recipes/${id}`)}
+            onClick={() => navigate(`/recipe/${id}`)}
             className="btn-secondary"
             disabled={isSaving}
           >
