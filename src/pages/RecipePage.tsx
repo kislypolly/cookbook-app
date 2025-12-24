@@ -84,7 +84,7 @@ const RecipePage = () => {
         {user?.id === recipe.user_id && (
           <div className="buttons-group">
             <Link
-              to={`/recipes/${recipe.id}/edit`}
+              to={`/recipe/${recipe.id}/edit`}
               className="action-btn btn-edit"
             >
               ✏️ Изменить рецепт
