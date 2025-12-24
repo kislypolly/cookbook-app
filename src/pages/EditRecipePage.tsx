@@ -36,7 +36,7 @@ const EditRecipePage = () => {
     if (!recipe) return
 
     if (user && recipe.user_id && recipe.user_id !== user.id) {
-      navigate(`/recipes/${id}`)
+      navigate(`/recipe/${id}`)
       return
     }
 
