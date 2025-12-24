@@ -6,6 +6,7 @@ import AuthPage from './pages/AuthPage'
 import CreateRecipePage from './pages/CreateRecipePage'
 import ProfilePage from './pages/ProfilePage'
 import EditRecipePage from './pages/EditRecipePage'
+import FavoritesPage from './pages/FavoritesPage'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="auth" element={<AuthPage />} />
         <Route path="create" element={<CreateRecipePage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="favorites" element={<FavoritesPage />} />
       </Route>
     </Routes>
   )
