@@ -22,11 +22,12 @@ export const fetchRecipes = createAsyncThunk<Recipe[]>(
     if (error) {
       throw error
     }
+
     return (data ?? []) as Recipe[]
   }
 )
 
-// обновление рецепта в Supabase
+// обновление рецепта
 export const updateRecipe = createAsyncThunk<
   Recipe,
   { id: string; updates: Partial<Recipe> },
@@ -52,6 +53,7 @@ export const updateRecipe = createAsyncThunk<
   }
 )
 
+// удаление рецепта
 export const deleteRecipe = createAsyncThunk<
   string,
   string,
@@ -76,7 +78,6 @@ export const deleteRecipe = createAsyncThunk<
   }
 )
 
-
 const recipeSlice = createSlice({
   name: 'recipes',
   initialState,
@@ -90,6 +91,7 @@ const recipeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // fetchRecipes
       .addCase(fetchRecipes.pending, (state) => {
         state.loading = true
         state.error = null
@@ -102,13 +104,15 @@ const recipeSlice = createSlice({
         state.loading = false
         state.error = action.error.message || 'Ошибка загрузки рецептов'
       })
+
+      // updateRecipe
       .addCase(updateRecipe.pending, (state) => {
         state.loading = true
         state.error = null
       })
       .addCase(updateRecipe.fulfilled, (state, action) => {
         state.loading = false
-        const index = state.items.findIndex(r => r.id === action.payload.id)
+        const index = state.items.findIndex((r) => r.id === action.payload.id)
         if (index !== -1) {
           state.items[index] = action.payload
         }
@@ -116,6 +120,17 @@ const recipeSlice = createSlice({
       .addCase(updateRecipe.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Ошибка обновления рецепта'
+      })
+
+      // deleteRecipe
+      .addCase(deleteRecipe.pending, (state) => {
+        state.error = null
+      })
+      .addCase(deleteRecipe.fulfilled, (state, action) => {
+        state.items = state.items.filter((r) => r.id !== action.payload)
+      })
+      .addCase(deleteRecipe.rejected, (state, action) => {
+        state.error = action.error.message || 'Ошибка удаления рецепта'
       })
   },
 })
