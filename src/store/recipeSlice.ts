@@ -8,9 +8,9 @@ const initialState: RecipesState = {
   currentRecipe: null,
 }
 
-export const fetchRecipes = createAsyncThunk(
+export const fetchRecipes = createAsyncThunk<Recipe[]>(
   'recipes/fetchRecipes',
-
+  async () => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     return [
       {
@@ -66,31 +66,12 @@ const recipeSlice = createSlice({
         state.loading = false
         state.items = action.payload
       })
-      .addCase(updateRecipe.fulfilled, (state, action) => {
-        state.loading = false;
-        const index = state.recipes.findIndex(r => r.id === action.payload.id);
-        if (index !== -1) state.recipes[index] = action.payload;
-      })
-      
       .addCase(fetchRecipes.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Ошибка загрузки рецептов'
       })
   },
 })
-export const updateRecipe = createAsyncThunk(
-  'recipes/updateRecipe',
-  async ({ id, ...recipe }: any, { getState }) => {
-    const { auth } = getState() as RootState;
-    const { data, error } = await supabase
-      .from('recipes')
-      .update({ ...recipe })
-      .eq('id', id)
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
-  }
-);
+
 export const { setCurrentRecipe, addRecipe } = recipeSlice.actions
 export default recipeSlice.reducer
