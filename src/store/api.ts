@@ -133,7 +133,6 @@ export const recipeApi = createApi({
             category,
             difficulty,
             user_id: user.id,
-            updated_at: new Date().toISOString(),
           }
 
           const { data, error } = await supabase
