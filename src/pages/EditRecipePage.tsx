@@ -32,11 +32,9 @@ const EditRecipePage = () => {
     difficulty: 'medium',
   })
 
-  // заполняем форму, когда рецепт загрузился
   useEffect(() => {
     if (!recipe) return
 
-    // защита: если рецепт не текущего пользователя — редирект обратно
     if (user && recipe.user_id && recipe.user_id !== user.id) {
       navigate(`/recipes/${id}`)
       return
