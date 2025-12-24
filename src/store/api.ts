@@ -136,11 +136,11 @@ export const recipeApi = createApi({
           }
 
           const { data, error } = await supabase
-            .from('recipes')
-            .update(updatePayload)
-            .eq('id', id)
-            .select()
-            .single()
+          .from('recipes')
+          .update(updatePayload)
+          .eq('id', id)
+          .select()
+          .single()
 
           if (error) {
             console.error('updateRecipe error', error)
